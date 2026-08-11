@@ -1,0 +1,33 @@
+project_id:
+project_name:
+project_type:
+system_version: 0.2.0
+template_version: 0.2.0
+contract_version: 0.5.0
+current_stage: initialization
+current_node: project-setup
+current_workitem: initialize-governance
+owner_slot:
+review_slot:
+decision_slot:
+gate_id: WF-G1
+gate_status: not-checked
+artifact_status: draft
+approval_requirement: undetermined
+human_approval: not-requested
+approval_decision_source:
+representation: structured
+execution_surface: undetermined
+governance: controlled
+ai_coverage: none
+adoption_evidence: designed
+next_gate:
+next_action:
+blocked_by:
+active_deliverable: project-workspace
+active_version: v0.1-project-init
+immutable_identity:
+source_baseline:
+decision_baseline:
+last_updated:
+updated_by:

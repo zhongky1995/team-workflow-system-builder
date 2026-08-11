@@ -1,0 +1,118 @@
+{
+  "schema_version": "0.5.0",
+  "system_version": "0.2.0",
+  "template_version": "0.2.0",
+  "project_id_pattern": "[A-Z][A-Z0-9]{1,7}-[0-9]{4}-[0-9]{3}",
+  "gate_statuses": [
+    "not-checked",
+    "pass",
+    "conditional-pass",
+    "return",
+    "blocked"
+  ],
+  "artifact_statuses": [
+    "not-recorded",
+    "draft",
+    "reviewed",
+    "revised",
+    "candidate",
+    "frozen",
+    "released",
+    "replaced",
+    "archived",
+    "paused"
+  ],
+  "approval_requirement_statuses": [
+    "undetermined",
+    "not-required",
+    "required"
+  ],
+  "human_approval_statuses": [
+    "not-recorded",
+    "not-requested",
+    "pending",
+    "approved",
+    "rejected"
+  ],
+  "source_statuses": [
+    "pending",
+    "needs-original",
+    "needs-date",
+    "conflict-pending",
+    "verified",
+    "context-only",
+    "rejected"
+  ],
+  "representation_statuses": [
+    "tacit/manual",
+    "documented",
+    "structured"
+  ],
+  "execution_surface_statuses": [
+    "undetermined",
+    "local",
+    "shared-repository",
+    "shared-toolspace",
+    "platform"
+  ],
+  "governance_statuses": [
+    "unmanaged",
+    "controlled",
+    "governed"
+  ],
+  "ai_coverage_statuses": [
+    "none",
+    "assisted",
+    "executable"
+  ],
+  "adoption_evidence_statuses": [
+    "designed",
+    "online-tested",
+    "pilot-adopted",
+    "operationally-accepted"
+  ],
+  "gate_id_pattern": "[A-Z][A-Z0-9]{1,7}-G[0-9]+",
+  "project_qa_id_pattern": "QA-[A-Z0-9][A-Z0-9-]*",
+  "canonical_gates": {
+    "WF-G1": "Intake Gate",
+    "WF-G2": "Planning Gate",
+    "WF-G3": "Delivery Gate",
+    "WF-G4": "Release Gate",
+    "WF-G5": "Closure Gate"
+  },
+  "paths": {
+    "system_version_record": "00-system-rules/system-version.md",
+    "gate_map": "02-workflow/stage-gate-map.md",
+    "project_template": "05-templates/project-workspace-template",
+    "project_registry": "09-governance/project-registry.md",
+    "template_manifest": "template-manifest.md",
+    "project_control": "project-control.md",
+    "stage_state": "02-stage-state/stage-state.yaml",
+    "knowledge_backflow": "07-archive-backflow/knowledge-backflow-card.md"
+  },
+  "required_project_files": [
+    "template-manifest.md",
+    "project-control.md",
+    "02-stage-state/stage-state.yaml",
+    "06-decisions-risks-changes/decision-log.md",
+    "06-decisions-risks-changes/risk-log.md",
+    "06-decisions-risks-changes/change-log.md",
+    "07-archive-backflow/archive-index.md",
+    "07-archive-backflow/retrospective.md",
+    "07-archive-backflow/knowledge-backflow-card.md"
+  ],
+  "backflow_required_artifact_statuses": [
+    "frozen",
+    "released",
+    "archived"
+  ],
+  "release_requires_decided_approval_requirement": true,
+  "ai_runtime": {
+    "enabled": false,
+    "system_entrypoints": [],
+    "project_entrypoints": [],
+    "required_capabilities": [],
+    "pre_write_check": "",
+    "post_write_check": ""
+  }
+}

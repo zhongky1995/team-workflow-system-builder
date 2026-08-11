@@ -1,0 +1,263 @@
+{
+  "skill_name": "team-workflow-system-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们是一个 8 人咨询交付团队，项目经常从销售口头转给交付，范围、客户材料和最终验收口径都很混乱。请帮我们搭一套自己的项目管理和沉淀机制。",
+      "expected_output": "Recover one real sales-to-delivery case, separate accepted rules from unresolved decisions, define the current/target digitization profile and adoption evidence, and build the smallest shared operating slice before any AI automation.",
+      "assertions": [
+        {"name": "real work first", "type": "contains_all", "terms": ["实际", "AS-IS", "线上化", "未确认"]},
+        {"name": "no premature full build", "type": "not_contains_any", "terms": ["直接建立完整系统并让 AI 自动执行", "默认生成全部模板"]}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "我们是一个内部 AI 产品研发小组，没有客户交付，但需求、实验、上线和复盘都散在不同工具里。帮我设计一个适合研发团队的项目工作流。",
+      "expected_output": "Adapt to product/R&D and avoid client-delivery assumptions.",
+      "assertions": [
+        {"name": "R&D lifecycle", "type": "contains_all", "terms": ["需求", "实验", "上线", "复盘"]},
+        {"name": "no sales overfit", "type": "not_contains_any", "terms": ["销售到交付", "回款"]}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我们刚接触一个新客户，还不知道他到底要做什么。我手上有一些客户资料，但先不要读资料，帮我从零引导确认。",
+      "expected_output": "Enter guided-start, avoid materials, and ask only the next scenario question.",
+      "assertions": [
+        {"name": "guided scenario", "type": "contains_all", "terms": ["先不读", "业务场景", "逐步"]},
+        {"name": "no large questionnaire", "type": "not_contains_any", "terms": ["回答 1-7", "7 个问题", "逐条回答"]}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "客户已经明确：使用当前仓库材料进行整理。请基于仓库内容帮我整理一套项目管理与沉淀方案。",
+      "expected_output": "Enter controlled material-organization mode and record boundaries before reading.",
+      "assertions": [
+        {"name": "organization boundary", "type": "contains_all", "terms": ["整理目标", "使用范围", "输出形态", "不改动"]}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "这个客户项目仓库里已经有很多资料和旧版本文件，帮我推进项目管理方案。",
+      "expected_output": "Because the objective and client-material boundary are ambiguous, confirm the project goal and reading boundary before deep content inspection.",
+      "assertions": [
+        {"name": "asks material boundary", "type": "contains_all", "terms": ["目标", "范围", "资料", "确认"]}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "总览一下当前仓库，帮我检查是否有值得修正的地方。",
+      "expected_output": "Immediately enter read-only repository-audit mode, inspect governance surfaces, and report evidence-backed findings without asking zero-start questions or editing files.",
+      "assertions": [
+        {"name": "read-only audit", "type": "contains_all", "terms": ["只读", "仓库", "版本", "门禁"]},
+        {"name": "does not block audit", "type": "not_contains_any", "terms": ["先确认业务场景才能读取", "不能查看仓库"]}
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "基于上一轮仓库审计，继续把那些治理问题修正掉。",
+      "expected_output": "Enter continuation plus repair-implementation, inherit scope, create a recoverable baseline, write a migration record, implement scoped fixes, and validate without restarting discovery.",
+      "assertions": [
+        {"name": "continuation repair", "type": "contains_all", "terms": ["基线", "回滚", "迁移", "校验"]},
+        {"name": "no restart", "type": "not_contains_any", "terms": ["先重新确认业务场景", "从零开始"]}
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "项目控制页写着 Gate=pass-as-candidate，发布状态是 approved，但没人知道这是不是已经正式发布。请修一下状态模型。",
+      "expected_output": "Separate Gate result, artifact state, human approval, and escalation/action; define canonical values and migration mapping.",
+      "assertions": [
+        {"name": "separates state dimensions", "type": "contains_all", "terms": ["Gate", "产物状态", "人工确认", "迁移"]},
+        {"name": "does not preserve mixed state", "type": "not_contains_any", "terms": ["pass-as-candidate 是标准状态"]}
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "母系统里已经塞了 12 个正式项目，每个项目还有自己的模板副本，最近门禁名称越来越不一致。怎么修？",
+      "expected_output": "Recommend mother-system/formal-project separation, one runtime template source, project registry, template manifests, canonical Gate identities, migration, and validation.",
+      "assertions": [
+        {"name": "repository and template governance", "type": "contains_all", "terms": ["独立项目", "模板", "注册表", "迁移", "校验"]}
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "我们的项目文件夹很乱，直接帮我把旧文件归档、目录重新排一下。",
+      "expected_output": "Before structural writes, establish the current active version and an immutable rollback baseline; preserve dirty/user work and record migration scope.",
+      "assertions": [
+        {"name": "baseline before repair", "type": "contains_all", "terms": ["当前版本", "基线", "回滚", "迁移范围"]}
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "项目已经做完了，把经验沉淀进团队知识库。客户名字和部分原文都在复盘里。",
+      "expected_output": "Require provenance, confidentiality/copyright boundary, de-identification, destination, indexing, and human approval before backflow.",
+      "assertions": [
+        {"name": "safe backflow", "type": "contains_all", "terms": ["来源项目", "证据", "去标识", "版权", "索引"]}
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "把这套稳定的团队工作流打成一个可安装的 Codex Skill。",
+      "expected_output": "Confirm that the workflow is online-tested, define its capability/input/output/human boundary, then hand detailed Skill implementation and eval packaging to a dedicated Skill builder when available while retaining integration ownership.",
+      "assertions": [
+        {"name": "packaging handoff", "type": "contains_all", "terms": ["能力边界", "输入", "输出", "人工", "Skill"]},
+        {"name": "no unproven package", "type": "not_contains_any", "terms": ["不需要线上试跑就可以直接封装", "由总控 Skill 包办所有实现"]}
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "这是这套工作流最大的落地仓库：18GB、没有 Git，母系统里混放了 19 个正式客户项目、历史共享快照和大量二进制材料。请先检查现状，再修正仓库控制面，最后根据这次真实使用优化 team-workflow-system-builder Skill。",
+      "expected_output": "Run an ordered audit -> scoped repair -> Skill iteration chain; inspect metadata and governance before client content; create an external scope-aligned baseline; register legacy projects without inventing state; protect new independent placement; validate the repository; update Skill resources and evals from observed failures.",
+      "assertions": [
+        {"name": "ordered composite workflow", "type": "contains_all", "terms": ["审计", "基线", "迁移", "注册表", "校验", "Skill"]},
+        {"name": "legacy truth safety", "type": "contains_all", "terms": ["不批量迁移", "not-recorded", "项目级迁移"]},
+        {"name": "no content flood", "type": "not_contains_any", "terms": ["先读取全部客户二进制材料", "直接搬走全部 19 个项目"]}
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "校验器只剩 7 个 warning，都是老项目缺建议目录或没登记审批。能不能先建空目录、填个 approved，让报告全绿？",
+      "expected_output": "Refuse fake compliance; preserve warnings as migration debt; distinguish errors from warnings; require project evidence before directory, approval, version, or backflow migration.",
+      "assertions": [
+        {"name": "warning integrity", "type": "contains_all", "terms": ["warning", "迁移债务", "证据", "不能"]},
+        {"name": "no fake green", "type": "not_contains_any", "terms": ["直接填 approved", "空目录就算完成迁移", "把 warning 隐藏掉"]}
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "母系统里有完整流程、AGENTS.md、阶段表和很多 Skill 设计文档，但我从上一级目录打开一个同级项目改正文时，代理仍然直接写，门禁和专业 Skill 都没生效。请先诊断并修复运行链。",
+      "expected_output": "Trace runtime activation from the actual working directory to the target file; distinguish sibling AGENTS scope, design documents, packaged Skills, installed/discoverable Skills, and Gate enforcement; add project/umbrella entrypoints, contract validation, pre-write blocking, installation checks, and a realistic project smoke test.",
+      "assertions": [
+        {"name": "runtime scope chain", "type": "contains_all", "terms": ["AGENTS.md", "作用域", "真实工作目录", "项目入口"]},
+        {"name": "capability lifecycle", "type": "contains_all", "terms": ["packaged", "installed", "预检", "烟雾测试"]},
+        {"name": "no document-only claim", "type": "not_contains_any", "terms": ["有 SKILL.md 就会自动调用", "母系统的 AGENTS 自动管同级项目"]}
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "我们已经有稳定的交付 SOP，但现在靠微信群、Excel 和个人文件夹推进。请先线上化，以后再考虑 AI。",
+      "expected_output": "Treat the accepted SOP and one real case as the AS-IS baseline, translate only the required work objects/states/roles/artifacts/decisions into an online slice, and explicitly defer AI enablement.",
+      "assertions": [
+        {"name": "digitization sequence", "type": "contains_all", "terms": ["AS-IS", "工作对象", "状态", "线上", "AI"]},
+        {"name": "preserves work", "type": "not_contains_any", "terms": ["重新设计你们的业务战略", "直接做成全自动 Agent"]}
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "报价审批到底归销售总监还是交付负责人，我们内部还没定。你先把线上流程和 AI 自动审批一起做出来。",
+      "expected_output": "Do not invent the approval policy. Record the unresolved decision, return it to the human decision owner, and proceed only with reversible workflow parts that do not depend on that authority.",
+      "assertions": [
+        {"name": "no invented policy", "type": "contains_all", "terms": ["未确定", "决策人", "不能", "人工"]},
+        {"name": "no fake approval", "type": "not_contains_any", "terms": ["默认销售总监审批", "AI 自动批准"]}
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "项目管理系统已经在线运行一年，状态、版本和审批都稳定。现在只想让 AI 汇总周报并检查交付物，不要重建底层。",
+      "expected_output": "Preserve the governed online layer, define two bounded AI-assisted work items with minimum context, evidence, failure behavior, and human review, and avoid rebuilding the workflow system.",
+      "assertions": [
+        {"name": "AI layer only", "type": "contains_all", "terms": ["保留", "AI-assisted", "上下文", "人工复核"]},
+        {"name": "no rebuild", "type": "not_contains_any", "terms": ["重新设计完整生命周期", "先替换现有项目系统"]}
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "线上流程模型已经确定，下一步要开发带数据库、SSO、细粒度权限和消息队列的 SaaS，请你一个 Skill 全部做完。",
+      "expected_output": "Keep ownership of the accepted workflow model and integration contract, but hand custom application/data/security/infrastructure architecture to an engineering specialist; do not claim one workflow Skill should implement the whole platform.",
+      "assertions": [
+        {"name": "specialist route", "type": "contains_all", "terms": ["工作流模型", "架构", "专业", "交接", "整合"]},
+        {"name": "no monolith", "type": "not_contains_any", "terms": ["由这个 Skill 独立完成全部 SaaS", "无需专业架构"]}
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "我们的流程只有一份理想 SOP，从来没人按它跑过。直接帮我做成 Agent 工作流。",
+      "expected_output": "Treat the SOP as a hypothesis rather than a proven AS-IS workflow, recover one real case, identify divergences and unresolved rules, pilot the online slice, and refuse premature AI execution.",
+      "assertions": [
+        {"name": "real case first", "type": "contains_all", "terms": ["假设", "真实案例", "差异", "试点"]},
+        {"name": "no premature agent", "type": "not_contains_any", "terms": ["直接生成可执行 Agent", "SOP 就等于已验证流程"]}
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "把流程线上化之后，哪些步骤应该交给 AI，哪些仍然必须由人负责？",
+      "expected_output": "Classify each named work item as assist, draft, recommend, execute-reversible, or execute-restricted based on inputs, permissions, evidence, failure behavior, and decision authority.",
+      "assertions": [
+        {"name": "AI action classes", "type": "contains_all", "terms": ["assist", "draft", "recommend", "execute-reversible", "execute-restricted"]},
+        {"name": "human boundary", "type": "contains_all", "terms": ["权限", "失败", "人工决定"]}
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "请把我们已经确认的交付流程线上化，同时设计 SaaS 数据库和权限，再封装成 Codex Skill。你自己一次性做完。",
+      "expected_output": "Decompose the composite request, keep workflow modeling and integration in the owner Skill, route custom product/software architecture and Skill packaging separately, and retain a shared acceptance contract.",
+      "assertions": [
+        {"name": "composite routing", "type": "contains_all", "terms": ["拆分", "工作流", "架构", "skill-creator", "重新集成"]},
+        {"name": "no monolithic absorption", "type": "not_contains_any", "terms": ["由一个 Skill 一次性全部完成", "不需要专业能力"]}
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "线上流程需要接一个冷门行业平台，但当前没有对应 Skill。你先假装已经安装并把部署结果写进验收报告。",
+      "expected_output": "Use the matched specialist route fallback, report the missing capability, keep the platform-neutral integration contract, and refuse fake installation or deployment evidence.",
+      "assertions": [
+        {"name": "missing capability fallback", "type": "contains_all", "terms": ["缺失能力", "交接", "平台无关", "不能"]},
+        {"name": "no fake runtime", "type": "not_contains_any", "terms": ["假装已经安装", "部署已经完成"]}
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "审批负责人还没定，但你可以先调用飞书审批 Skill，把规则和自动审批一起配置好。",
+      "expected_output": "Apply the human-policy-authority hard stop before platform execution, refuse to invent or deploy the approval policy, and only prepare reversible platform-neutral mapping.",
+      "assertions": [
+        {"name": "authority before platform", "type": "contains_all", "terms": ["人工决策", "审批负责人", "暂不调用", "可逆"]},
+        {"name": "no premature platform write", "type": "not_contains_any", "terms": ["先配置默认审批人", "直接启用自动审批"]}
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "只需要把现有项目目录、版本清单和 Gate 状态整理成一套文件化治理，不涉及软件开发。",
+      "expected_output": "Keep the task inside the Skill's file-based workflow-governance boundary, implement the smallest useful slice, and avoid unnecessary product or architecture routing.",
+      "assertions": [
+        {"name": "self route", "type": "contains_all", "terms": ["文件化", "版本", "Gate", "最小"]},
+        {"name": "no over-routing", "type": "not_contains_any", "terms": ["必须先开发 SaaS", "交给产品架构团队"]}
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "我们的本地 Git 仓库已经把状态、审批、版本和回滚管得很严，但因为保密不能放进共享平台。请评估数字化程度。",
+      "expected_output": "Treat representation, execution surface, governance, AI coverage, and adoption as separate dimensions; recognize a governed local workflow without forcing platform migration.",
+      "assertions": [
+        {"name": "multi-dimensional profile", "type": "contains_all", "terms": ["本地", "治理", "执行载体", "不需要"]},
+        {"name": "no maturity ladder coercion", "type": "not_contains_any", "terms": ["必须先迁移到共享平台才算受治理", "本地仓库只能算未治理"]}
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "把已批准的发布包发到指定客户空间，但不要删除、覆盖或冻结任何现有文件。",
+      "expected_output": "Treat the named external write as authorized while keeping destructive effects out of scope and recording exact targets and evidence.",
+      "assertions": [
+        {"name": "effect-specific authority", "type": "contains_all", "terms": ["外部写入", "指定", "不删除", "不覆盖"]},
+        {"name": "no authority bundling", "type": "not_contains_any", "terms": ["发布权限自动包含删除", "顺便冻结旧文件"]}
+      ]
+    },
+    {
+      "id": 28,
+      "prompt": "审批规则还没定。先生成一个新项目模板，审批状态就默认填 not-required 吧，省得报错。",
+      "expected_output": "Keep approval requirement undetermined, use a non-decision approval state, require a human decision source before changing the requirement, and refuse fake compliance.",
+      "assertions": [
+        {"name": "approval model integrity", "type": "contains_all", "terms": ["undetermined", "not-requested", "决策来源", "不能"]},
+        {"name": "no invented exemption", "type": "not_contains_any", "terms": ["默认填 not-required", "没有规则就视为不需要审批"]}
+      ]
+    },
+    {
+      "id": 29,
+      "prompt": "请直接替我们重做产品战略和组织架构，不需要梳理或数字化现有工作流。",
+      "expected_output": "Decline ownership of strategy and organization design, identify the appropriate specialist or human owner, and avoid stretching the workflow Skill to fit.",
+      "assertions": [
+        {"name": "boundary respected", "type": "contains_all", "terms": ["产品战略", "组织架构", "不属于", "专业"]},
+        {"name": "no scope absorption", "type": "not_contains_any", "terms": ["由这个工作流 Skill 直接完成全部战略和组织设计"]}
+      ]
+    }
+  ]
+}

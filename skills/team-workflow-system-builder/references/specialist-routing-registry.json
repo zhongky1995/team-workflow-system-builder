@@ -1,0 +1,371 @@
+{
+  "registry_version": "0.2.0",
+  "owner_skill": "team-workflow-system-builder",
+  "semantics": "advisory-routing-contract",
+  "resolution_order": [
+    "human-policy-authority",
+    "domain-method-correctness",
+    "custom-product-software",
+    "skill-packaging",
+    "enterprise-platform-execution",
+    "knowledge-system",
+    "artifact-production",
+    "workflow-governance-self"
+  ],
+  "selection_policy": {
+    "decompose_composite_request": true,
+    "steps": [
+      "Split a composite request into independently verifiable work items.",
+      "Apply human-policy-authority and other hard-stop routes before specialist matching.",
+      "Match the most specific route whose when conditions fit and whose exclusions do not fit.",
+      "Use priority only after specificity; do not route a specialist task back to the owner Skill merely because it can discuss the topic.",
+      "Verify candidate availability in the active Skill catalog before invocation and read the selected Skill instructions.",
+      "If no named candidate is available, discover by capability tags or return a visible missing-capability handoff; never silently absorb the work.",
+      "Return every specialist result to the owner Skill for workflow-semantic reconciliation and acceptance."
+    ],
+    "candidate_availability": [
+      "Prefer an exact candidate Skill ID that is present in the active session.",
+      "Otherwise select an available Skill whose description matches the route discovery tags and required output.",
+      "Do not install a missing Skill unless the user explicitly requests installation.",
+      "Do not treat a candidate name in this registry as proof that the capability is installed or suitable."
+    ]
+  },
+  "routes": [
+    {
+      "id": "human-policy-authority",
+      "priority": 100,
+      "mode": "human-owner",
+      "when": [
+        "A business rule, policy, approval owner, decision right, acceptance standard, release, deletion, publication, or external commitment is unresolved.",
+        "The requested automation would cause AI to make a decision reserved for an accountable human."
+      ],
+      "exclusions": [
+        "The authority rule is already accepted and the task only represents it online without changing its meaning."
+      ],
+      "candidate_skills": [],
+      "discovery_tags": [],
+      "required_inputs": [
+        "The exact unresolved decision.",
+        "The affected workflow objects, states, people, and consequences.",
+        "Reversible work that can proceed without the decision."
+      ],
+      "expected_outputs": [
+        "An explicit human decision or a recorded pending decision with owner and deadline.",
+        "A statement of which implementation work remains blocked."
+      ],
+      "human_boundary": "Only the named accountable human may decide, approve, release, delete, publish, or commit externally.",
+      "validation": [
+        "No default policy or approval has been invented.",
+        "Dependent automation remains blocked or explicitly non-canon until the decision exists."
+      ],
+      "integration_destination": "Transformation contract, authority map, decision register, and affected Gate or migration plan.",
+      "fallback": "Stop the dependent work, surface the decision request, and continue only reversible independent work."
+    },
+    {
+      "id": "domain-method-correctness",
+      "priority": 95,
+      "mode": "human-or-specialist",
+      "when": [
+        "The correctness, safety, legality, or professional validity of an industry/domain method must be judged before digitization.",
+        "Conflicting domain practices cannot be resolved from accepted project evidence."
+      ],
+      "exclusions": [
+        "The domain method is already accepted and the task only structures or governs its execution."
+      ],
+      "candidate_skills": [],
+      "discovery_tags": [
+        "domain specialist",
+        "industry method",
+        "legal or compliance review",
+        "professional evidence"
+      ],
+      "required_inputs": [
+        "The disputed method or claim.",
+        "Applicable jurisdiction, industry, evidence, and project boundary.",
+        "The workflow decision that depends on the answer."
+      ],
+      "expected_outputs": [
+        "A bounded professional judgment with sources, assumptions, and uncertainty.",
+        "An accepted rule or a clearly unresolved domain decision."
+      ],
+      "human_boundary": "A domain specialist or accountable human approves the method; the workflow Skill does not certify professional correctness.",
+      "validation": [
+        "The judgment is evidence-backed and scoped to the applicable context.",
+        "Uncertainty and prohibited automation are explicit."
+      ],
+      "integration_destination": "Accepted-rule register, evidence ledger, workflow model, and AI eligibility decision.",
+      "fallback": "Record the method as unresolved and keep dependent online or AI behavior disabled."
+    },
+    {
+      "id": "custom-product-software",
+      "priority": 90,
+      "mode": "specialist",
+      "when": [
+        "The selected online model requires custom application, product experience, API, database, identity, permissions, security, queue, deployment, or infrastructure design.",
+        "A codebase or AI product architecture must be created or materially refactored."
+      ],
+      "exclusions": [
+        "The task is limited to file-based workflow governance covered by the bundled contract and scripts."
+      ],
+      "candidate_skills": [
+        {
+          "id": "product-manager-architect",
+          "use_when": "User journeys, product scope, requirements, and implementation-ready product decisions are needed."
+        },
+        {
+          "id": "ai-product-architecture-review",
+          "use_when": "An AI-native product, Agent platform, Copilot, or model/tool boundary needs architecture review."
+        },
+        {
+          "id": "ai-architect-system-audit-refactor",
+          "use_when": "A major code/system architecture audit or refactor is required."
+        },
+        {
+          "id": "coding-environment-init",
+          "use_when": "A software repository needs a governed AI coding environment before implementation."
+        }
+      ],
+      "discovery_tags": [
+        "product architecture",
+        "software architecture",
+        "API and data model",
+        "security and infrastructure"
+      ],
+      "required_inputs": [
+        "Accepted AS-IS and TO-BE workflow semantics.",
+        "Work objects, states, actions, authority, exceptions, and non-functional constraints.",
+        "Scope exclusions and required integration points."
+      ],
+      "expected_outputs": [
+        "A product or technical architecture within the accepted workflow boundary.",
+        "Implementation plan, risks, interfaces, and verification evidence."
+      ],
+      "human_boundary": "Product scope, security posture, budget, and irreversible architecture choices require accountable human approval.",
+      "validation": [
+        "The architecture implements rather than silently changes accepted workflow semantics.",
+        "Interfaces, failure behavior, permissions, migration, and rollback are testable."
+      ],
+      "integration_destination": "TO-BE operating model, implementation plan, runtime chain, migration record, and acceptance test.",
+      "fallback": "Deliver the workflow and integration contract only; mark custom implementation as a missing specialist capability."
+    },
+    {
+      "id": "skill-packaging",
+      "priority": 80,
+      "mode": "specialist",
+      "when": [
+        "A stable online-tested workflow must become a reusable installable Skill.",
+        "Skill metadata, resources, scripts, evals, installation, discovery, or forward testing must be implemented."
+      ],
+      "exclusions": [
+        "The workflow has not been online-tested or its capability and human boundaries remain unresolved."
+      ],
+      "candidate_skills": [
+        {
+          "id": "skill-creator",
+          "use_when": "Create or update the Skill package, metadata, resources, validation, and evals."
+        }
+      ],
+      "discovery_tags": [
+        "Skill creation",
+        "Skill packaging",
+        "Skill evaluation"
+      ],
+      "required_inputs": [
+        "Proven workflow capability boundary.",
+        "Accepted inputs, outputs, allowed actions, human decisions, runtime assumptions, and failure modes.",
+        "Representative positive, negative, and handoff scenarios."
+      ],
+      "expected_outputs": [
+        "A lean Skill package with only required instructions and resources.",
+        "Validation, realistic evals, installation or discovery evidence, and forward-test results where appropriate."
+      ],
+      "human_boundary": "The human retains approval over package scope, installation, publication, and any widened authority.",
+      "validation": [
+        "The package passes its format and resource checks.",
+        "Evals test observed failure modes and do not assume unproven workflow adoption."
+      ],
+      "integration_destination": "Capability registry, runtime entrypoint, transformation acceptance record, and knowledge backflow.",
+      "fallback": "Keep the workflow specification and packaging handoff; do not fabricate an installed or tested Skill."
+    },
+    {
+      "id": "enterprise-platform-execution",
+      "priority": 75,
+      "mode": "specialist",
+      "when": [
+        "The accepted workflow must be implemented through a named enterprise collaboration platform such as Feishu/Lark or DingTalk.",
+        "Platform-specific records, approvals, tasks, documents, tables, messages, or calendars must be created or changed."
+      ],
+      "exclusions": [
+        "The user only needs a platform-neutral workflow model or template pack."
+      ],
+      "candidate_skills": [
+        {
+          "id": "lark-apps",
+          "use_when": "A Feishu/Lark custom app or hosted application is required."
+        },
+        {
+          "id": "lark-base",
+          "use_when": "The online work object should be represented in Feishu/Lark Base."
+        },
+        {
+          "id": "lark-approval",
+          "use_when": "An already-approved approval policy must be represented or operated in Feishu/Lark."
+        },
+        {
+          "id": "lark-task",
+          "use_when": "Accepted work items should be created or managed as Feishu/Lark tasks."
+        },
+        {
+          "id": "dws",
+          "use_when": "The target platform is DingTalk and its supported workflow capabilities fit the task."
+        }
+      ],
+      "discovery_tags": [
+        "Feishu or Lark",
+        "DingTalk",
+        "enterprise workflow platform"
+      ],
+      "required_inputs": [
+        "Named target platform and authorized tenant or workspace boundary.",
+        "Accepted work objects, states, fields, permissions, and human approval rules.",
+        "Allowed external mutations and rollback plan."
+      ],
+      "expected_outputs": [
+        "Platform-specific implementation mapped to the accepted online model.",
+        "Created or changed object IDs, validation evidence, and remaining platform gaps."
+      ],
+      "human_boundary": "Tenant access, messages, approvals, external writes, and production changes follow explicit user authority and platform permissions.",
+      "validation": [
+        "Platform objects and fields preserve the accepted workflow meaning.",
+        "External writes, IDs, permissions, and rollback evidence are recorded."
+      ],
+      "integration_destination": "Online object registry, runtime entrypoint, migration record, and operational acceptance evidence.",
+      "fallback": "Produce a platform-neutral mapping and identify the unavailable platform capability without claiming deployment."
+    },
+    {
+      "id": "knowledge-system",
+      "priority": 70,
+      "mode": "specialist",
+      "when": [
+        "The workflow requires a structured knowledge base, knowledge architecture, content migration, or knowledge-quality release beyond simple backflow records."
+      ],
+      "exclusions": [
+        "The task only registers a small evidence-backed reusable lesson in the existing knowledge destination."
+      ],
+      "candidate_skills": [
+        {
+          "id": "structured-knowledgebase-builder",
+          "use_when": "Audit, design, restructure, or build a governed knowledge base."
+        }
+      ],
+      "discovery_tags": [
+        "knowledge architecture",
+        "knowledge base",
+        "content governance"
+      ],
+      "required_inputs": [
+        "Knowledge users, questions, sources, permissions, lifecycle, and destination.",
+        "Project evidence and confidentiality or reuse boundaries."
+      ],
+      "expected_outputs": [
+        "A governed knowledge structure or migration within the accepted scope.",
+        "Source traceability, lifecycle states, quality checks, and release evidence."
+      ],
+      "human_boundary": "Humans approve confidentiality, copyright, publication, de-identification, and knowledge validity claims.",
+      "validation": [
+        "Knowledge claims retain source and applicability boundaries.",
+        "Project facts are not silently promoted to universal guidance."
+      ],
+      "integration_destination": "Knowledge-backflow register, source registry, navigation, and closure evidence.",
+      "fallback": "Keep evidence-backed backflow candidates inside the project and mark knowledge-system work pending."
+    },
+    {
+      "id": "artifact-production",
+      "priority": 60,
+      "mode": "specialist",
+      "when": [
+        "The selected workflow output must be produced in a specialized file format or edited in a live productivity application.",
+        "Document, spreadsheet, presentation, PDF, or visual fidelity is itself part of acceptance."
+      ],
+      "exclusions": [
+        "A plain Markdown workflow contract or simple copy-ready template is sufficient."
+      ],
+      "candidate_skills": [
+        {
+          "id": "documents:documents",
+          "use_when": "Create or edit professional Word-compatible documents."
+        },
+        {
+          "id": "spreadsheets:Spreadsheets",
+          "use_when": "Create, edit, analyze, or validate spreadsheets."
+        },
+        {
+          "id": "presentations:Presentations",
+          "use_when": "Create or edit PowerPoint-compatible presentations."
+        },
+        {
+          "id": "pdf:pdf",
+          "use_when": "Read, create, inspect, or render governed PDF outputs."
+        }
+      ],
+      "discovery_tags": [
+        "document production",
+        "spreadsheet",
+        "presentation",
+        "PDF"
+      ],
+      "required_inputs": [
+        "Approved content, format, template, destination, and fidelity criteria.",
+        "No-edit regions, source versions, and output authority."
+      ],
+      "expected_outputs": [
+        "The requested artifact in the required format.",
+        "Visual or structural validation evidence and source-version traceability."
+      ],
+      "human_boundary": "Humans approve externally distributed content and any substantive business claims; the format specialist does not invent them.",
+      "validation": [
+        "The artifact matches the approved source and format requirements.",
+        "No-edit content and version lineage remain intact."
+      ],
+      "integration_destination": "Artifact registry, active-version record, Gate evidence, and delivery or release package.",
+      "fallback": "Return the approved content and format handoff without pretending the specialized artifact was produced."
+    },
+    {
+      "id": "workflow-governance-self",
+      "priority": 50,
+      "mode": "self",
+      "when": [
+        "The task is AS-IS recovery, digitization-profile assessment, shared workflow modeling, file-based governance, state/version/Gate design, migration, repair, AI-node boundary, pilot, acceptance, or backflow integration within accepted semantics."
+      ],
+      "exclusions": [
+        "A higher-priority human or specialist route applies to the same work item."
+      ],
+      "candidate_skills": [
+        {
+          "id": "team-workflow-system-builder",
+          "use_when": "Own the transformation contract, workflow model, routing, integration, migration, and acceptance."
+        }
+      ],
+      "discovery_tags": [
+        "workflow digitization",
+        "project governance",
+        "AI workflow integration"
+      ],
+      "required_inputs": [
+        "Accepted workflow evidence or a bounded guided-start target.",
+        "Current and target digitization profile, authority effects, scope, exclusions, and adoption/acceptance evidence."
+      ],
+      "expected_outputs": [
+        "The smallest transformation artifact needed by the selected action.",
+        "Visible unresolved decisions, specialist handoffs, validation, and rollback when applicable."
+      ],
+      "human_boundary": "The Skill may structure accepted work but may not invent policy, approve release, or widen authority.",
+      "validation": [
+        "Preserved and changed workflow semantics are explicit.",
+        "No higher-priority specialist work was silently absorbed."
+      ],
+      "integration_destination": "Canonical online operating model and transformation acceptance record.",
+      "fallback": "Return to guided-start or a read-only audit; do not fabricate missing workflow facts."
+    }
+  ]
+}
