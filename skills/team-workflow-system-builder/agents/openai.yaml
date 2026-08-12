@@ -1,4 +1,4 @@
 interface:
   display_name: "Team Workflow System Builder"
-  short_description: "把既有团队工作转成共享、可验证、受治理且可安全 AI 化的运行系统"
-  default_prompt: "Use $team-workflow-system-builder to recover the accepted AS-IS work, design the smallest governed operating slice on the appropriate execution surface, resolve and reintegrate specialist routes, and add bounded AI only when the requested target and evidence justify it."
+  short_description: "把既有团队工作转成受治理系统，并建立可验证的工作项与 Skill 调度"
+  default_prompt: "Use $team-workflow-system-builder to recover the accepted work, build the smallest governed operating slice, separate build-time specialist routing from target runtime dispatch, and add bounded AI only with complete work-item accounting and evidence."

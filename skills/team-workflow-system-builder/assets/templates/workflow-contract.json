@@ -1,6 +1,6 @@
 {
-  "schema_version": "0.5.0",
-  "system_version": "0.2.0",
+  "schema_version": "0.6.0",
+  "system_version": "0.3.0",
   "template_version": "0.2.0",
   "project_id_pattern": "[A-Z][A-Z0-9]{1,7}-[0-9]{4}-[0-9]{3}",
   "gate_statuses": [
@@ -111,6 +111,7 @@
     "enabled": false,
     "system_entrypoints": [],
     "project_entrypoints": [],
+    "dispatch_registry": "02-workflow/ai-work-item-dispatch.json",
     "required_capabilities": [],
     "pre_write_check": "",
     "post_write_check": ""

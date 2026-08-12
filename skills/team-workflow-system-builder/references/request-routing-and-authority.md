@@ -92,7 +92,7 @@ The handoff must state the accepted workflow facts, exact problem, required outp
 
 ### Registry Resolution
 
-Use `specialist-routing-registry.json` when any work item may leave the owner Skill’s direct boundary.
+Use `specialist-routing-registry.json` when transformation work may leave the owner Skill’s direct boundary. This is the build-time routing layer for creating or repairing the operating system.
 
 1. Decompose composite requests before routing.
 2. Apply `human-policy-authority` and `domain-method-correctness` before implementation routes.
@@ -104,6 +104,8 @@ Use `specialist-routing-registry.json` when any work item may leave the owner Sk
 8. Record the chosen route, candidate or human owner, required output, validation, integration destination, and result.
 
 The registry does not invoke a Skill by itself. The active host agent performs capability discovery and invocation. This distinction prevents a configuration file from being mistaken for an installed runtime or an autonomous orchestrator.
+
+Do not reuse this registry as the target team's runtime dispatcher. When the target workflow itself routes real work items to Skills or humans, use `runtime-capability-dispatch.md` and a target-owned dispatch registry with complete routed/excluded work-item accounting.
 
 ## 6. Material Boundaries
 

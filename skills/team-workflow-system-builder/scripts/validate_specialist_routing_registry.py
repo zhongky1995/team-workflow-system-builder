@@ -47,6 +47,10 @@ def validate(path: Path) -> list[str]:
 
     if data.get("owner_skill") != "team-workflow-system-builder":
         errors.append("owner_skill must be team-workflow-system-builder")
+    if data.get("scope") != "transformation-build-time":
+        errors.append("scope must be transformation-build-time")
+    if data.get("not_for") != "target-workflow-runtime-dispatch":
+        errors.append("not_for must be target-workflow-runtime-dispatch")
     if not re.fullmatch(r"\d+\.\d+\.\d+", str(data.get("registry_version", ""))):
         errors.append("registry_version must use semantic version syntax")
 

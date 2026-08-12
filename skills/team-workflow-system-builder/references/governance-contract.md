@@ -130,12 +130,15 @@ Create a migration record when changing:
 - Artifact or approval status semantics.
 - Required template files or fields.
 - AI instruction entrypoints, runtime capability requirements, or enforcement levels.
+- Target runtime work-item inventory, dispatch route, AI action class, selected capability, fallback, or writeback semantics.
 - Mother-system/project placement.
 - Release, archive, or backflow rules.
 
 Record from/to versions, affected projects, actions, excluded content, rollback point, validation, and unresolved human decisions.
 
 For schema `0.4.x -> 0.5.x`, map old `human_approval=not-required` to `approval_requirement=not-required` plus `human_approval=not-requested` only when a human decision source exists. Otherwise migrate to `approval_requirement=undetermined`; do not manufacture a decision source.
+
+For schema `0.5.x -> 0.6.x`, keep `ai_runtime.enabled=false` until a target-owned dispatch registry accounts for the complete selected-slice work-item inventory. Do not convert build-time specialist routes or candidate Skill IDs into runtime installation evidence.
 
 ## Validation Rules
 
@@ -147,6 +150,8 @@ For a reusable file-based system, validate at least:
 - Required project files exist.
 - Required AI entrypoints exist at the umbrella, mother-system, and formal-project roots that are actually used.
 - Routed capabilities are packaged and installed/discoverable; installed copies or links match the canonical package.
+- Build-time specialist routes and target runtime dispatch are separate; every target work item in the selected slice is routed or explicitly excluded.
+- Candidate capability IDs are not treated as selected or installed evidence; required selected capabilities resolve to recorded installed paths.
 - Pre-write validation is distinguishable from advisory documentation and post-write reporting.
 - Project status fields use allowed values and required operational fields are nonblank.
 - Registry rows use the canonical schema, point to valid locations when locally available, and match project state exactly.

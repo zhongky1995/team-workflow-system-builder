@@ -49,6 +49,7 @@ Produce:
 - TO-BE online object/state/action/authority/artifact model.
 - Human-only and AI-eligible work boundaries.
 - Specialist implementation handoffs and integration contract.
+- When AI runtime is in scope: target work-item inventory, routed/excluded accounting, runtime capability routes, fallback, and reintegration contract.
 - Minimum workspace, governance, runtime, and migration assets for the selected slice.
 - Smallest real pilot and acceptance evidence.
 
@@ -64,6 +65,7 @@ Produce or update:
 - Contract, navigation, registry, templates, and scoped project files.
 - Validation output.
 - For AI-maintained systems, runtime activation evidence from the real working directory: applicable entrypoint, installed capability source, pre-write result, and post-write result.
+- Target runtime dispatch evidence: complete selected-slice inventory, candidate versus selected capability state, human-only exclusions, fallback, and reintegration result.
 - Clean/dirty state and remaining warnings.
 - Human decisions that remain pending.
 - Specialist handoffs and whether each output has been reintegrated.

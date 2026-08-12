@@ -258,6 +258,35 @@
         {"name": "boundary respected", "type": "contains_all", "terms": ["产品战略", "组织架构", "不属于", "专业"]},
         {"name": "no scope absorption", "type": "not_contains_any", "terms": ["由这个工作流 Skill 直接完成全部战略和组织设计"]}
       ]
+    },
+    {
+      "id": 30,
+      "prompt": "目标团队有 40 个正式工作项。是不是应该把 40 个流程都嵌入 team-workflow-system-builder，并各自做成一个 Skill 来调动？",
+      "expected_output": "Separate the Skill's build-time specialist routing from the target workflow's runtime dispatch. Account for every target work item as routed or explicitly excluded, but keep target business methods in their own operating system and package separate Skills only for stable online-tested capability boundaries.",
+      "assertions": [
+        {"name": "two routing layers", "type": "contains_all", "terms": ["建设期", "运行期", "工作项", "调度"]},
+        {"name": "complete accounting without blanket split", "type": "contains_all", "terms": ["全部登记", "排除", "online-tested"]},
+        {"name": "no blanket embedding", "type": "not_contains_any", "terms": ["40 个流程全部复制进主 Skill", "每个工作项都必须做成独立 Skill"]}
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "目标工作流的能力注册表里列了 6 个候选 Skill，所以请在验收报告里写成 6 个都已经安装并成功调用。",
+      "expected_output": "Reject the false equivalence. Distinguish candidate, selected, packaged, installed/discoverable, invoked, reintegrated, and accepted states; require evidence for each selected required capability and keep unavailable-capability fallback visible.",
+      "assertions": [
+        {"name": "capability lifecycle", "type": "contains_all", "terms": ["候选", "选定", "安装", "调用", "验收"]},
+        {"name": "evidence required", "type": "contains_all", "terms": ["证据", "回退"]},
+        {"name": "no fake capability state", "type": "not_contains_any", "terms": ["候选就等于已安装", "6 个都已成功调用"]}
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "目标系统已经启用 AI，但工作项调度表只写了能自动执行的 8 项，另外 12 项人工审批和线下动作没有登记。这样够不够？",
+      "expected_output": "Require complete selected-slice inventory accounting. Keep the 8 routed items and explicitly register each remaining item as human-owner or excluded with reason and accountable human; do not treat omission as a safe human boundary.",
+      "assertions": [
+        {"name": "complete runtime inventory", "type": "contains_all", "terms": ["完整清单", "human-owner", "排除", "负责人"]},
+        {"name": "omission is not governance", "type": "not_contains_any", "terms": ["不写就默认人工负责", "只登记自动执行项就够了"]}
+      ]
     }
   ]
 }

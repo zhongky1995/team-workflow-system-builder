@@ -1,6 +1,8 @@
 {
-  "registry_version": "0.2.0",
+  "registry_version": "0.3.0",
   "owner_skill": "team-workflow-system-builder",
+  "scope": "transformation-build-time",
+  "not_for": "target-workflow-runtime-dispatch",
   "semantics": "advisory-routing-contract",
   "resolution_order": [
     "human-policy-authority",

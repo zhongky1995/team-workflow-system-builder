@@ -1,12 +1,12 @@
 ---
 name: team-workflow-system-builder
 description: >-
-  Convert an existing or accepted team/project way of working into a shared, governed operating system, then add bounded AI assistance or execution only where it is safe and verifiable. Use for AS-IS recovery, workflow digitization, project workspace/state design, handoffs, Gates, role slots, source/version/decision governance, repository repair, migration, runtime activation, AI task boundaries, validation, adoption, retrospectives, knowledge backflow, and packaging a proven workflow for reuse. Use roles, versions, validation, migration, or AI-workflow concerns here only when they are part of transforming or repairing a team operating workflow. 中文触发：团队工作数字化、流程线上化、项目管理线上化、AI 工作流、项目工作区、项目治理、仓库审计与修复、交接、门禁、信源、版本、迁移、复盘和知识回流。Do not use it to invent business strategy, domain methodology, organization policy, or arbitrary software architecture that the team has not accepted.
+  Convert an existing or accepted team/project way of working into a shared, governed operating system, then add bounded AI assistance or execution only where it is safe and verifiable. Use for AS-IS recovery, workflow digitization, project workspace/state design, handoffs, Gates, role slots, source/version/decision governance, repository repair, migration, runtime activation, target-workflow work-item/Skill dispatch, AI task boundaries, validation, adoption, retrospectives, knowledge backflow, and packaging a proven workflow for reuse. Use roles, versions, validation, migration, capability routing, or AI-workflow concerns here only when they are part of transforming or repairing a team operating workflow. 中文触发：团队工作数字化、流程线上化、项目管理线上化、AI 工作流、工作项与 Skill 调度、项目工作区、项目治理、仓库审计与修复、交接、门禁、信源、版本、迁移、复盘和知识回流。Do not use it to invent business strategy, domain methodology, organization policy, or arbitrary software architecture that the team has not accepted.
 ---
 
 # Team Workflow System Builder
 
-Operational revision: `0.6.0`.
+Operational revision: `0.7.0`.
 
 Own the transformation contract and integration result:
 
@@ -52,6 +52,7 @@ If these are unresolved, record the gap and route it to the responsible human or
 8. Establish a recoverable baseline before repair or migration.
 9. Distinguish documented design, packaged capability, installation, discovery, invocation, and enforcement.
 10. Close only after archive and evidence-backed knowledge backflow.
+11. Keep build-time specialist routing separate from the target workflow's runtime work-item dispatch.
 
 Remove industry-specific logic unless the target workflow requires it.
 
@@ -100,7 +101,9 @@ Record four independent dimensions and change only the smallest necessary slice:
 
 Track adoption evidence separately as `designed`, `online-tested`, `pilot-adopted`, or `operationally-accepted`. A governed local repository is valid, and one executable AI node does not make the whole workflow AI-executable. Preserve working dimensions and do not add AI while the underlying state, artifact, authority, exception, or acceptance rule is unresolved.
 
-When a work item may require another capability, read `references/specialist-routing-registry.json`. The registry is a routing contract for the active host agent, not an autonomous dispatcher and not proof that a named Skill is installed.
+When transformation work may require another capability, read `references/specialist-routing-registry.json`. It routes work needed to build, repair, or package the system. It is not the target team's runtime dispatcher and is not proof that a named Skill is installed.
+
+When the target operating workflow itself will accept AI requests, invoke specialist Skills, or preserve human-only decisions, read `references/runtime-capability-dispatch.md`. Account for every target work item without copying the target business method into this Skill and without turning every work item into a separate Skill.
 
 ## Run The Transformation
 
@@ -163,7 +166,7 @@ For systems spanning stages, templates, or repositories, read `references/govern
 
 Create a template or machine rule only when it represents an accepted work object or protects a frequent/high-risk handoff, decision, evidence, permission, or version boundary.
 
-### 4. Route Specialist Implementation
+### 4. Route Build-Time Specialist Implementation
 
 Keep the transformation result unified while routing work by expertise:
 
@@ -185,6 +188,8 @@ Resolve routing in this order:
 
 Do not route simple workflow-governance work merely because a more specialized Skill exists. Do not keep specialist work merely because this Skill can describe it. A specialist output is incomplete until it is reconciled with the governed digital operating model.
 
+This routing layer is for the transformation effort. Do not reuse `specialist-routing-registry.json` as the target workflow's production dispatcher. The target runtime needs its own work-item inventory, capability selections, human boundaries, validation, fallback, and writeback contract.
+
 ### 5. Implement Online Before AI
 
 For scoped file-based changes:
@@ -202,6 +207,18 @@ Read `references/resource-routing.md` before creating a file-based mother system
 ### 6. Add The AI Execution Layer
 
 AI-enable a work item only when it has clear inputs, permitted actions, expected outputs, evidence, failure behavior, and human authority.
+
+First design the target runtime dispatch contract using `references/runtime-capability-dispatch.md`:
+
+1. Inventory every formal target work item in the selected workflow slice.
+2. Mark each item as runtime-routed or explicitly excluded with reason and human owner.
+3. For routed items, classify the owner route as `workflow-owner`, `specialist-optional`, or `human-owner`.
+4. Classify the AI action as `assist`, `draft`, `recommend`, `execute-reversible`, or `execute-restricted`.
+5. Record inputs, allowed actions, outputs, human boundary, pre/post checks, failure behavior, writeback targets, candidate capabilities, selected installed capability, and fallback.
+6. Verify candidate, selected, installed, invoked, and accepted states separately. A candidate Skill ID is not runtime activation evidence.
+7. Reintegrate specialist results through the workflow owner before Gate, version, or state updates.
+
+Every target work item must be accounted for, but not every item should invoke AI or become a Skill. Human-owned and intentionally non-AI items remain explicit exclusions or `human-owner` routes. Package a separate workflow Skill only after the bounded work item is stable and at least `online-tested`.
 
 Verify this chain:
 
@@ -232,6 +249,7 @@ Classify each AI node as `assist`, `draft`, `recommend`, `execute-reversible`, o
 - AS-IS recovery: transformation contract, workflow map, unresolved decisions.
 - Online model: object/state/action/authority/artifact map plus minimum workspace and migration plan.
 - AI enablement: task boundary, context, capability route, human boundary, pre/post validation, and realistic eval.
+- Runtime dispatch: full selected-slice work-item inventory, routed/excluded accounting, candidate-versus-selected capability evidence, fallback, reintegration, and adoption state.
 - Repair: evidence-backed finding, baseline, scoped change, validation, rollback, and remaining debt.
 
 Do not emit the full system report or complete template pack unless requested. Use `references/output-contracts-by-mode.md`; use `references/system-output-template.md` only for an explicit full system deliverable.
@@ -247,6 +265,9 @@ Before finishing, confirm that:
 - human and AI authority are separate;
 - specialist work was routed and reintegrated rather than silently absorbed;
 - each routed work item records its registry route, selected capability or human owner, and fallback when unavailable;
+- build-time specialist routes and target runtime routes are stored separately and not confused;
+- every target work item in the selected slice is either runtime-routed or explicitly excluded with a reason and human owner;
+- candidate Skills are not reported as selected, installed, invoked, or accepted without separate evidence;
 - a real online or AI entrypoint was forward-tested when implementation was requested;
 - project facts, templates, mother-system knowledge, and released artifacts remain separated;
 - repair has a baseline, rollback, validation, and visible warnings;
@@ -269,6 +290,7 @@ Ask only when the missing answer changes the workflow meaning, lifecycle, author
 
 - Request and authority: `references/request-routing-and-authority.md`
 - Machine-readable specialist routes: `references/specialist-routing-registry.json`
+- Target runtime work-item and capability dispatch: `references/runtime-capability-dispatch.md`
 - Progressive AS-IS recovery: `references/zero-to-one-guided-flow.md`
 - Extended discovery prompts when the next question is unclear: `references/discovery-question-pack.md`
 - Existing repository audit/repair: `references/repository-audit-repair.md`

@@ -1,9 +1,9 @@
 project_id:
 project_name:
 project_type:
-system_version: 0.2.0
+system_version: 0.3.0
 template_version: 0.2.0
-contract_version: 0.5.0
+contract_version: 0.6.0
 current_stage: initialization
 current_node: project-setup
 current_workitem: initialize-governance
