@@ -33,6 +33,33 @@ REQUIRED_PATH_KEYS = {
     "stage_state",
     "knowledge_backflow",
 }
+RUNTIME_ROUTES = {"workflow-owner", "specialist-optional", "human-owner"}
+AI_ACTIONS = {"assist", "draft", "recommend", "execute-reversible", "execute-restricted"}
+DISPATCH_ITEM_FIELDS = {
+    "id",
+    "stage",
+    "deliverable",
+    "truth_source",
+    "route",
+    "ai_action",
+    "inputs",
+    "allowed_actions",
+    "expected_outputs",
+    "human_boundary",
+    "pre_write_checks",
+    "post_write_checks",
+    "failure_behavior",
+    "writeback_targets",
+    "capability_route",
+}
+CAPABILITY_ROUTE_FIELDS = {
+    "build_route_id",
+    "candidate_ids",
+    "discovery_tags",
+    "selected_id",
+    "required",
+    "fallback",
+}
 
 
 @dataclass
@@ -111,6 +138,10 @@ def valid_date(value: str) -> bool:
 
 def nonempty_string_list(value: object) -> bool:
     return isinstance(value, list) and bool(value) and all(isinstance(item, str) and item for item in value)
+
+
+def string_list(value: object) -> bool:
+    return isinstance(value, list) and all(isinstance(item, str) and item for item in value)
 
 
 def validate_contract(contract_path: Path, contract: object, findings: list[Finding]) -> None:
@@ -231,6 +262,17 @@ def validate_contract(contract_path: Path, contract: object, findings: list[Find
     runtime = contract.get("ai_runtime", {"enabled": False})
     if not isinstance(runtime, dict) or not isinstance(runtime.get("enabled", False), bool):
         findings.append(Finding("ERROR", contract_path, "ai_runtime must be an object with a boolean enabled field"))
+    elif runtime.get("enabled", False):
+        dispatch_registry = runtime.get("dispatch_registry")
+        if (
+            not isinstance(dispatch_registry, str)
+            or not dispatch_registry
+            or Path(dispatch_registry).is_absolute()
+            or ".." in Path(dispatch_registry).parts
+        ):
+            findings.append(
+                Finding("ERROR", contract_path, "enabled ai_runtime needs a safe relative dispatch_registry path")
+            )
 
 
 def validate_approval(
@@ -463,26 +505,190 @@ def validate_registry(root: Path, path: Path, contract: dict, findings: list[Fin
     return rows_by_id
 
 
+def valid_work_item_id(value: object) -> bool:
+    return isinstance(value, str) and bool(re.fullmatch(r"[A-Za-z][A-Za-z0-9._:-]*", value))
+
+
+def validate_runtime_dispatch_registry(
+    path: Path,
+    contract: dict,
+    installed_capability_ids: set[str],
+    findings: list[Finding],
+) -> None:
+    try:
+        registry = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        findings.append(Finding("ERROR", path, f"cannot load runtime dispatch registry: {exc}"))
+        return
+    if not isinstance(registry, dict):
+        findings.append(Finding("ERROR", path, "runtime dispatch registry must be a JSON object"))
+        return
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(registry.get("schema_version", ""))):
+        findings.append(Finding("ERROR", path, "runtime dispatch schema_version must use semantic version syntax"))
+    if registry.get("adoption_evidence") not in set(contract["adoption_evidence_statuses"]):
+        findings.append(Finding("ERROR", path, "runtime dispatch adoption_evidence is invalid"))
+
+    inventory = registry.get("work_item_inventory")
+    if not nonempty_string_list(inventory) or not all(valid_work_item_id(item) for item in inventory or []):
+        findings.append(Finding("ERROR", path, "enabled runtime needs a non-empty valid work_item_inventory"))
+        inventory_ids: set[str] = set()
+    else:
+        inventory_ids = set(inventory)
+        if len(inventory_ids) != len(inventory):
+            findings.append(Finding("ERROR", path, "work_item_inventory IDs must be unique"))
+
+    excluded = registry.get("excluded_work_items")
+    if not isinstance(excluded, list):
+        findings.append(Finding("ERROR", path, "excluded_work_items must be a list"))
+        excluded = []
+    excluded_ids: list[str] = []
+    for index, item in enumerate(excluded, start=1):
+        label = f"excluded_work_items[{index}]"
+        if not isinstance(item, dict):
+            findings.append(Finding("ERROR", path, f"{label} must be an object"))
+            continue
+        item_id = item.get("id")
+        if not valid_work_item_id(item_id):
+            findings.append(Finding("ERROR", path, f"{label}.id is invalid"))
+        else:
+            excluded_ids.append(item_id)
+        for field in ("reason", "human_owner"):
+            if not isinstance(item.get(field), str) or not item[field].strip():
+                findings.append(Finding("ERROR", path, f"{label}.{field} must be non-empty"))
+    if len(excluded_ids) != len(set(excluded_ids)):
+        findings.append(Finding("ERROR", path, "excluded work-item IDs must be unique"))
+
+    work_items = registry.get("work_items")
+    if not isinstance(work_items, list) or not work_items:
+        findings.append(Finding("ERROR", path, "enabled runtime needs at least one routed work item"))
+        work_items = []
+    routed_ids: list[str] = []
+    for index, item in enumerate(work_items, start=1):
+        label = f"work_items[{index}]"
+        if not isinstance(item, dict):
+            findings.append(Finding("ERROR", path, f"{label} must be an object"))
+            continue
+        missing = sorted(DISPATCH_ITEM_FIELDS - set(item))
+        if missing:
+            findings.append(Finding("ERROR", path, f"{label} missing fields: {', '.join(missing)}"))
+        item_id = item.get("id")
+        if not valid_work_item_id(item_id):
+            findings.append(Finding("ERROR", path, f"{label}.id is invalid"))
+        else:
+            routed_ids.append(item_id)
+            label = item_id
+        for field in ("stage", "deliverable", "truth_source", "human_boundary", "failure_behavior"):
+            if not isinstance(item.get(field), str) or not item[field].strip():
+                findings.append(Finding("ERROR", path, f"{label}.{field} must be non-empty"))
+        for field in (
+            "inputs",
+            "allowed_actions",
+            "expected_outputs",
+            "pre_write_checks",
+            "post_write_checks",
+            "writeback_targets",
+        ):
+            if not nonempty_string_list(item.get(field)):
+                findings.append(Finding("ERROR", path, f"{label}.{field} must be a non-empty string list"))
+        route = item.get("route")
+        action = item.get("ai_action")
+        if route not in RUNTIME_ROUTES:
+            findings.append(Finding("ERROR", path, f"{label}.route must be one of {sorted(RUNTIME_ROUTES)}"))
+        if action not in AI_ACTIONS:
+            findings.append(Finding("ERROR", path, f"{label}.ai_action must be one of {sorted(AI_ACTIONS)}"))
+        if route == "human-owner" and action not in {"assist", "draft", "recommend"}:
+            findings.append(Finding("ERROR", path, f"{label} human-owner route cannot execute the human decision"))
+
+        capability = item.get("capability_route")
+        if not isinstance(capability, dict):
+            findings.append(Finding("ERROR", path, f"{label}.capability_route must be an object"))
+            continue
+        missing_capability = sorted(CAPABILITY_ROUTE_FIELDS - set(capability))
+        if missing_capability:
+            findings.append(
+                Finding("ERROR", path, f"{label}.capability_route missing fields: {', '.join(missing_capability)}")
+            )
+        for field in ("build_route_id", "fallback"):
+            if not isinstance(capability.get(field), str) or not capability[field].strip():
+                findings.append(Finding("ERROR", path, f"{label}.capability_route.{field} must be non-empty"))
+        for field in ("candidate_ids", "discovery_tags"):
+            if not string_list(capability.get(field)):
+                findings.append(Finding("ERROR", path, f"{label}.capability_route.{field} must be a string list"))
+        required = capability.get("required")
+        selected = capability.get("selected_id")
+        if not isinstance(required, bool):
+            findings.append(Finding("ERROR", path, f"{label}.capability_route.required must be boolean"))
+        if not isinstance(selected, str):
+            findings.append(Finding("ERROR", path, f"{label}.capability_route.selected_id must be a string"))
+            selected = ""
+        if route == "specialist-optional" and not (
+            capability.get("candidate_ids") or capability.get("discovery_tags")
+        ):
+            findings.append(
+                Finding("ERROR", path, f"{label} specialist-optional route needs candidate IDs or discovery tags")
+            )
+        if required is True and not selected:
+            findings.append(Finding("ERROR", path, f"{label} required capability needs selected_id"))
+        if selected and selected not in installed_capability_ids:
+            findings.append(
+                Finding("ERROR", path, f"{label} selected capability is not installed/discoverable: {selected}")
+            )
+
+    if len(routed_ids) != len(set(routed_ids)):
+        findings.append(Finding("ERROR", path, "routed work-item IDs must be unique"))
+    routed_set = set(routed_ids)
+    excluded_set = set(excluded_ids)
+    overlap = sorted(routed_set & excluded_set)
+    if overlap:
+        findings.append(Finding("ERROR", path, f"work items cannot be routed and excluded: {', '.join(overlap)}"))
+    unaccounted = sorted(inventory_ids - routed_set - excluded_set)
+    unknown = sorted((routed_set | excluded_set) - inventory_ids)
+    if unaccounted:
+        findings.append(Finding("ERROR", path, f"work-item inventory is not fully accounted: {', '.join(unaccounted)}"))
+    if unknown:
+        findings.append(Finding("ERROR", path, f"dispatch registry contains unknown work items: {', '.join(unknown)}"))
+
+
 def validate_ai_runtime(root: Path, contract: dict, findings: list[Finding]) -> None:
     runtime = contract.get("ai_runtime", {"enabled": False})
     if not runtime.get("enabled", False):
         return
+    normalized_lists: dict[str, list] = {}
     for key in ("system_entrypoints", "project_entrypoints", "required_capabilities"):
-        if not isinstance(runtime.get(key), list):
+        value = runtime.get(key)
+        if not isinstance(value, list):
             findings.append(Finding("ERROR", root, f"ai_runtime.{key} must be a list"))
+            value = []
+        normalized_lists[key] = value
     for key in ("pre_write_check", "post_write_check"):
         if not isinstance(runtime.get(key), str) or not runtime[key].strip():
             findings.append(Finding("ERROR", root, f"enabled AI runtime needs ai_runtime.{key}"))
-    for relative in runtime.get("system_entrypoints", []):
+    for relative in normalized_lists["system_entrypoints"]:
         if not isinstance(relative, str) or not (root / relative).is_file():
             findings.append(Finding("ERROR", root, f"missing AI system entrypoint: {relative!r}"))
-    for capability in runtime.get("required_capabilities", []):
+
+    installed_capability_ids: set[str] = set()
+    for capability in normalized_lists["required_capabilities"]:
         if not isinstance(capability, dict) or not capability.get("id") or not capability.get("path"):
             findings.append(Finding("ERROR", root, "each required capability needs id and path"))
             continue
+        capability_id = capability["id"]
+        if not isinstance(capability_id, str):
+            findings.append(Finding("ERROR", root, "required capability id must be a string"))
+            continue
+        if capability_id in installed_capability_ids:
+            findings.append(Finding("ERROR", root, f"duplicate required capability ID: {capability_id}"))
+        installed_capability_ids.add(capability_id)
         capability_path = Path(capability["path"]).expanduser()
         if not capability_path.exists():
-            findings.append(Finding("ERROR", root, f"required capability is not installed/discoverable: {capability['id']}"))
+            findings.append(Finding("ERROR", root, f"required capability is not installed/discoverable: {capability_id}"))
+
+    dispatch_relative = runtime.get("dispatch_registry")
+    if not isinstance(dispatch_relative, str) or not dispatch_relative:
+        findings.append(Finding("ERROR", root, "enabled AI runtime needs ai_runtime.dispatch_registry"))
+        return
+    dispatch_path = root / dispatch_relative
+    validate_runtime_dispatch_registry(dispatch_path, contract, installed_capability_ids, findings)
 
 
 def validate_system(root: Path, contract: dict, findings: list[Finding]) -> dict[str, list[list[str]]]:

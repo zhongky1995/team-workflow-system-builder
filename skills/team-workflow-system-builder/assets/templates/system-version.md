@@ -1,14 +1,14 @@
 # Workflow System Version
 
-- System version: `0.2.0`
+- System version: `0.3.0`
 - Template version: `0.2.0`
-- Contract/schema version: `0.5.0`
+- Contract/schema version: `0.6.0`
 - Status: `active`
 - Effective date:
 
 ## Changes
 
-- Separate approval requirement from approval result, add safe runtime configuration, and tighten validation.
+- Separate build-time specialist routing from target runtime dispatch; add complete work-item accounting, capability-state evidence, fallback, and reintegration validation.
 
 ## Compatibility
 

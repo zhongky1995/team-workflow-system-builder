@@ -16,6 +16,7 @@ SYSTEM_FILES = {
     "system-version.md": "00-system-rules/system-version.md",
     "workflow-contract.json": "00-system-rules/workflow-contract.json",
     "workflow-gate-map.md": "02-workflow/stage-gate-map.md",
+    "ai-work-item-dispatch.json": "02-workflow/ai-work-item-dispatch.json",
     "project-registry.md": "09-governance/project-registry.md",
 }
 

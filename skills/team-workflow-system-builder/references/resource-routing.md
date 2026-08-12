@@ -58,6 +58,8 @@ The script deliberately does not create Git history. After the team-specific con
 
 Mother-system-only assets include `system-version.md`, `workflow-contract.json`, `workflow-gate-map.md`, and `project-registry.md`. `decision-risk-change-log.md` is a compact alternative to the three separate logs; do not install both as competing truth sources.
 
+`ai-work-item-dispatch.json` is a mother-system runtime asset. Keep it disabled and empty until the selected workflow slice has an accepted work-item inventory and AI runtime is explicitly in scope. When enabled, every inventoried item must be runtime-routed or explicitly excluded; see `references/runtime-capability-dispatch.md`.
+
 ## Safe Invocation Order
 
 ```text

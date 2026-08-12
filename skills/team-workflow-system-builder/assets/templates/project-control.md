@@ -6,9 +6,9 @@
 - Project name:
 - Project type:
 - Workspace reference:
-- System version: `0.2.0`
+- System version: `0.3.0`
 - Template version: `0.2.0`
-- Contract/schema version: `0.5.0`
+- Contract/schema version: `0.6.0`
 - Last updated:
 - Updated by:
 

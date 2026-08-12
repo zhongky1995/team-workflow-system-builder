@@ -2,9 +2,9 @@
 
 - Project ID:
 - Project name:
-- System version: `0.2.0`
+- System version: `0.3.0`
 - Template version: `0.2.0`
-- Contract/schema version: `0.5.0`
+- Contract/schema version: `0.6.0`
 - Generated from: `05-templates/project-workspace-template`
 - Creation date:
 - Latest migration: `initial`
